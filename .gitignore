@@ -1,0 +1,9 @@
+Makefile
+UiComparisonTool.pro.user
+UiComparisonTool
+qrc_qml.cpp
+qrc_qml.o
+.qmake.stash
+*.o
+lib/
+moc_*
