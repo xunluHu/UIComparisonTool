@@ -20,18 +20,24 @@ bool UiComparisonController::comparePic() {
     Mat img, img2;
     img = imread("./speedPlate.png", IMREAD_COLOR);
     img2 = imread("./speedPlate.png", IMREAD_COLOR);
-    int diffCount = 0;
-    int totalPicNum = img.channels() * img.rows * img.cols;
-    //cout << "R(numpy)" << endl << format(img, Formatter::FMT_CSV) << endl;
-    qWarning() << "channels" << img.channels();
-    for(int i = 0; i < 400; ++i) {
-        if(*(img.ptr<uchar>(i)) != *(img2.ptr<uchar>(i))) {
-            ++diffCount;
+    int nr = img.rows;
+    int nc = img.cols * img.channels();
+    int div = 64;
+    int totalCount = 0;
+    int differentCount = 0;
+    for(int j = 0; j < nr; ++j) {
+        uchar* data = img.ptr<uchar>(j);
+        uchar* data1 = img2.ptr<uchar>(j);
+        for(int i=0; i < nc; ++i) {
+            *data++ = *data / div * div + div / 2;
+            *data1++ = *data1 / div * div + div / 2;
+            if(data1 != data) {
+                qDebug() << "data !== data1";
+                ++differentCount;
+            }
+            ++totalCount;
         }
-        qWarning() << "each bit of pic" << *(img.ptr<uchar>(i));
+        qDebug() << "the ratio of different count" << (double)differentCount / (double)totalCount;
     }
-    cout << "the img rows" << img.rows << "    " << img.cols << endl;;
-    cout << "the different count is " << diffCount << "the procent is " << (float)diffCount / totalPicNum << endl;
-
     return true;
 }
